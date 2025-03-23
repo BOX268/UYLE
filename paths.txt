@@ -1,0 +1,2 @@
+/media/thibaud/Stock/TrainingData/images/train
+/media/thibaud/Stock/TrainingData/images/train_labels_auto

@@ -1,0 +1,35 @@
+
+#### DESCRIPITION ####
+
+UYLE (Ultralytics Yolo Label Editor) allow to graphically do mass modification of YOLO's output of label files.
+
+
+
+#### USER MANUAL ####
+
+
+	- PATHS -
+
+		before starting the program, put the path to the image folder and the path to the folder containing the corresponding labels, in paths.txt.
+		line 1 is path to image files, line 2 is path to label files.
+
+
+	- CONTROLS -
+
+	left panel :
+		scroll to scroll
+		click to click
+		
+
+
+	edit area :
+		scroll to zoom
+		right click to move
+		left click to move label handles
+		"a" key to add a label
+		"d" key to delete the currently hovered label
+		num keys to change the currently hovered label class ID (from 0 to 2 currently)
+
+
+
+	label modifications are automatically saved when switching images or closing application
