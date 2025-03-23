@@ -24,10 +24,11 @@
 
 	edit area :
 		scroll to zoom
-		right click to move
+		right click to move te picture 
 		left click to move label handles
+		keep press left click to drag label
 		"a" key to add a label
-		"d" key to delete the currently hovered label
+		"d" or "BACKSPACE" key to delete the currently hovered label
 		num keys to change the currently hovered label class ID (from 0 to 2 currently)
 
 

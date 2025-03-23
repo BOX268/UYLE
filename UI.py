@@ -8,7 +8,7 @@ font = None
 
 def Init() :
 	global font
-	font = pygame.font.Font("./font/ConsolaMono-Book.ttf")
+	font = pygame.font.Font("font/ConsolaMono-Book.ttf")
 
 class PushButton :
 

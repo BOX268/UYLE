@@ -40,14 +40,22 @@ while True :
 				print("leftmousedown")
 				canActivate = True
 				for button in UI.pushButtons :
-
+					
 					 # can click only one button at once
 					if button.Hovered(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]) and canActivate :
 						if canActivate :
 							print("activation")
-							button.MouseClicked()
+							button.MouseClicked() # mouseclicked ?? 
+
 							canActivate = False
-			
+
+				for rectangle in Canvas.rects:
+					if rectangle.IsInside_rectangle(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
+						print("inside the rectangle")
+						rectangle.Dragging_Pressed(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+
+
+
 			elif event.button == 3 : # right mouse button
 				print("righmouseown")
 				Canvas.EnablePanning(True)
@@ -59,6 +67,9 @@ while True :
 
 				for button in UI.pushButtons :
 					button.MouseReleased()
+
+				for rectangle in Canvas.rects:
+					rectangle.MouseReleased()
 			
 			elif event.button == 3 :
 				Canvas.EnablePanning(False)
@@ -88,14 +99,23 @@ while True :
 			if event.key == pygame.K_a :
 				Canvas.AddLabel()
 			
-			elif event.key == pygame.K_d :
+			elif event.key == pygame.K_c :
+				Canvas.copy_rectangle()
+
+			elif event.key == pygame.K_v :
+				Canvas.paste_rectangle()
+
+			elif event.key == (pygame.K_d) or event.key ==(pygame.K_BACKSPACE) :
 				Canvas.DeleteFocusedLabel()
 			
 			elif event.key == pygame.K_0 :
+				Canvas.lastObjectID = 0
 				Canvas.SetFocusedLabelObject(0)
 			elif event.key == pygame.K_1 :
+				Canvas.lastObjectID = 1
 				Canvas.SetFocusedLabelObject(1)
 			elif event.key == pygame.K_2 :
+				Canvas.lastObjectID = 2
 				Canvas.SetFocusedLabelObject(2)
 	
 	if Canvas.updateUI : Canvas.Draw()

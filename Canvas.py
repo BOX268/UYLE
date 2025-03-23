@@ -48,9 +48,11 @@ mouseInWindow = False
 panStartX = 0
 panStartY = 0
 
+""" clibboard for copy-pasting """
+clipboard = None
 
-
-
+"""last ObjectID used"""
+lastObjectID = 1
 
 updateUI = False
 
@@ -147,7 +149,50 @@ class AdjustableRect :
 		self.rightHandle.lowerCorner = self.leftHandle
 
 		self.color = [0, 0, 0]
-	
+
+		# Nouveaux attributs pour le déplacement complet du rectangle
+		self.dragging = False
+		self.dragOffsetX = 0
+		self.dragOffsetY = 0
+
+
+	def IsInside_rectangle(self, x_clicked, y_clicked):
+		# Récupérer les coordonnées des deux poignées en pixels (déjà ajustées pour zoom et panning)
+		x1, y1 = self.leftHandle.ConvertFracToPx(self.leftHandle.fracX, self.leftHandle.fracY)
+		x2, y2 = self.rightHandle.ConvertFracToPx(self.rightHandle.fracX, self.rightHandle.fracY)
+		
+		# Les coins du rectangle dans le système de coordonnées du canvas
+		top_left = (min(x1, x2), min(y1, y2))
+		bottom_right = (max(x1, x2), max(y1, y2))
+		
+ 		#soustrayant le décalage du panneau gauche.
+		canvas_x = x_clicked - SharedData.leftPanelWidth
+		canvas_y = y_clicked
+		
+		# Vérifier si le point cliqué se trouve dans le rectangle
+		if top_left[0] <= canvas_x <= bottom_right[0] and top_left[1] <= canvas_y <= bottom_right[1]:
+			print("Le point est dans le rectangle.")
+			return True
+		return False
+
+
+	# Méthode à appeler lors d'un clic souris
+	def Dragging_Pressed(self, x, y):
+		if self.leftHandle.hovered or self.rightHandle.hovered:
+			self.dragging = False
+			print("Une poignée est sélectionnée, impossible de déplacer le rectangle.")
+			return
+
+		self.dragging = True
+		# Enregistrer la différence entre le clic et le coin supérieur gauche du rectangle
+		x1, y1 = self.leftHandle.ConvertFracToPx(self.leftHandle.fracX, self.leftHandle.fracY)
+		self.dragOffsetX = x - x1
+		self.dragOffsetY = y - y1
+
+	def MouseReleased(self):
+		self.dragging = False
+
+
 	def MouseMoved(self, x, y) :
 		global focusedLabel
 
@@ -156,6 +201,24 @@ class AdjustableRect :
 
 		if self.rightHandle.hovered or self.leftHandle.hovered :
 			focusedLabel = self
+
+		# Si le rectangle est en mode déplacement, on calcule le décalage
+		if self.dragging:
+			# La nouvelle position du coin supérieur gauche du rectangle
+			newLeftX = x - self.dragOffsetX
+			newLeftY = y - self.dragOffsetY
+			# On calcule la largeur et la hauteur en pixels (la taille reste constante)
+			x1, y1 = self.leftHandle.ConvertFracToPx(self.leftHandle.fracX, self.leftHandle.fracY)
+			x2, y2 = self.rightHandle.ConvertFracToPx(self.rightHandle.fracX, self.rightHandle.fracY)
+			width = x2 - x1
+			height = y2 - y1
+			# On met à jour les positions des poignées en convertissant les nouvelles positions en coordonnées fractionnaires
+			newLeftFrac = self.leftHandle.ConvertPxToFrac(newLeftX, newLeftY)
+			newRightFrac = self.rightHandle.ConvertPxToFrac(newLeftX + width, newLeftY + height)
+			self.leftHandle.fracX, self.leftHandle.fracY = newLeftFrac
+			self.rightHandle.fracX, self.rightHandle.fracY = newRightFrac
+			global updateUI
+			updateUI = True
 	
 	def Draw(self, surface) :
 		global focusedLabel
@@ -405,8 +468,8 @@ def RequestUpdateUI() :
 
 # add a new label at the center of the screen
 def AddLabel() :
-
-	rects.append(AdjustableRect(0, 0.5, 0.5, 0.5, 0.5))
+	global lastObjectID 
+	rects.append(AdjustableRect(lastObjectID, 0.5, 0.5, 0.5, 0.5))
 
 	RequestUpdateUI()
 
@@ -424,3 +487,47 @@ def SetFocusedLabelObject(num) :
 	focusedLabel.objectID = num
 
 	RequestUpdateUI()
+
+def copy_rectangle():
+    global clipboard_rect
+    # On copie le rectangle actuellement sélectionné (par exemple, celui stocké dans Canvas.focusedLabel)
+    if focusedLabel is not None:
+        rect = focusedLabel
+
+        clipboard_rect = {
+            "objectID": rect.objectID,
+            "left_fracX": rect.leftHandle.fracX,
+            "left_fracY": rect.leftHandle.fracY,
+            "right_fracX": rect.rightHandle.fracX,
+            "right_fracY": rect.rightHandle.fracY
+        }
+        print("Rectangle copié :", clipboard_rect)
+    else:
+        print("Aucun rectangle sélectionné pour copier.")
+
+def paste_rectangle():
+    global clipboard_rect
+    if clipboard_rect is not None:
+        # On peut ajouter un petit décalage pour que le rectangle collé ne se superpose pas exactement
+        offset = 0.05  # Décalage en coordonnées fractionnaires
+        new_left_fracX = clipboard_rect["left_fracX"] + offset
+        new_left_fracY = clipboard_rect["left_fracY"] + offset
+        new_right_fracX = clipboard_rect["right_fracX"] + offset
+        new_right_fracY = clipboard_rect["right_fracY"] + offset
+        
+        # Calculer le centre et la taille du nouveau rectangle
+        center_x = (new_left_fracX + new_right_fracX) / 2
+        center_y = (new_left_fracY + new_right_fracY) / 2
+        width = abs(new_right_fracX - new_left_fracX)
+        height = abs(new_right_fracY - new_left_fracY)
+        
+        # Créer une nouvelle instance d'AdjustableRect avec ces données
+        new_rect = AdjustableRect(clipboard_rect["objectID"], center_x, center_y, width, height)
+        # Ajoute le nouveau rectangle à la liste globale de Canvas (que tu appelles par exemple Canvas.rects)
+        rects.append(new_rect)
+        print("Rectangle collé :", new_rect)
+    else:
+        print("Aucun rectangle copié dans le presse-papiers.")
+
+
+
