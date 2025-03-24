@@ -49,7 +49,7 @@ panStartX = 0
 panStartY = 0
 
 """ clibboard for copy-pasting """
-clipboard = None
+clipboard_rect = None
 
 """last ObjectID used"""
 lastObjectID = 1

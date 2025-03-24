@@ -10,8 +10,11 @@
 
 	- PATHS -
 
-		before starting the program, put the path to the image folder and the path to the folder containing the corresponding labels, in paths.txt.
-		line 1 is path to image files, line 2 is path to label files.
+		before starting the program, update the differents if necessary in paths.txt : 
+		- line 1 : image_folder_paths
+		- line 2 : label_folder_paths
+		- line 3 :font_file
+		- line 4 :model_file
 
 
 	- CONTROLS -

@@ -1,1 +1,6 @@
-pygame
+pygame: 
+pip install pygame
+
+
+pillow_heif: ( to convert heic image to jpg image)
+pip install pillow-heif

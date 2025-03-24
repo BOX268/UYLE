@@ -11,9 +11,9 @@ pygame.init()
 
 mainWindow = WindowManager.MainWindow()
 
-UI.Init()
-
 SharedData.GetPaths()
+
+UI.Init()
 
 SharedData.ListFiles()
 

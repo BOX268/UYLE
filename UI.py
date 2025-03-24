@@ -1,5 +1,5 @@
 import pygame
-
+import SharedData 
 import WindowManager as WM
 
 
@@ -8,7 +8,7 @@ font = None
 
 def Init() :
 	global font
-	font = pygame.font.Font("font/ConsolaMono-Book.ttf")
+	font = pygame.font.Font(SharedData.fontPath)
 
 class PushButton :
 

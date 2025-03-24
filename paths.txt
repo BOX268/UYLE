@@ -1,2 +1,4 @@
 Sample/Images
 Sample/Labels
+font/ConsolaMono-Book.ttf
+best_canette.pt

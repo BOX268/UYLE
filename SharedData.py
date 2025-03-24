@@ -3,6 +3,9 @@ import os
 
 imagePath = ""
 labelPath = ""
+fontPath = ""
+modelPath = ""
+
 
 filePairs = {}
 
@@ -15,7 +18,7 @@ classColors = [[0, 200, 0], [0, 0, 200], [200, 0, 0]]
 
 def GetPaths() :
 
-	global imagePath, labelPath
+	global imagePath, labelPath, fontPath, modelPath
 
 	with open("paths.txt", "r") as file :
 
@@ -23,9 +26,13 @@ def GetPaths() :
 
 		imagePath = lines[0].strip("\n")
 		labelPath = lines[1].strip("\n")
+		fontPath = lines[2].strip("\n")
+		modelPath = lines[3].strip("\n")
 
 		print(imagePath)
 		print(labelPath)
+		print(fontPath)
+		print(modelPath)
 
 
 def ListFiles() :
