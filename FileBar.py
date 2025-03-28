@@ -40,7 +40,9 @@ def Regenerate() :
 	SharedData.ListFiles()
 
 	i = 0
-	for file in SharedData.filePairs.keys() :
+	files = [key for key in SharedData.filePairs.keys()]
+	files.sort()
+	for file in files :
 
 		generatedButtons.append(FileButton(0, i*buttonHeight, menuWidth, buttonHeight, Draw, file))
 		i += 1

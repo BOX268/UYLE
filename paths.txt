@@ -1,4 +1,3 @@
-Sample/Images
-Sample/Labels
+/home/thibaud/Documents/Sudriabotik/Dataset_Cans/Images
+/home/thibaud/Documents/Sudriabotik/Dataset_Cans/Labels
 font/ConsolaMono-Book.ttf
-best_canette.pt
