@@ -475,9 +475,7 @@ def RequestUpdateUI() :
 # add a new label at the center of the screen
 def AddLabel() :
 	global lastObjectID 
-	x = imgOffsetPannedX / resizeRatio
-	y = imgOffsetPannedY / resizeRatio
-	rects.append(AdjustableRect(lastObjectID, x, y, 0.1, 0.1))
+	rects.append(AdjustableRect(lastObjectID, 0.5, 0.5, 0.5, 0.5))
 
 	RequestUpdateUI()
 
