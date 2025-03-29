@@ -65,6 +65,7 @@ class PushButton :
 	def Draw(self, surface) :
 		color = [80, 80, 80]
 		if self.hovered : color = [70, 70, 70]
+		if self.selected : color = [50, 50, 50]
 
 		pygame.draw.rect(surface, color, pygame.rect.Rect(self.x, self.y, self.w, self.h))
 

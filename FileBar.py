@@ -21,6 +21,11 @@ class FileButton(UI.PushButton) :
 	
 	def MouseClicked(self) :
 		super().MouseClicked()
+
+		global generatedButtons
+		for button in generatedButtons : button.selected = False
+		self.selected = True
+
 		print(f"opening {self.text}")
 		Canvas.OpenImage(self.text) # the button text is the image file name
 		Canvas.Draw()
