@@ -49,10 +49,14 @@ while True :
 
 							canActivate = False
 
-				for rectangle in Canvas.rects:
-					if rectangle.IsInside_rectangle(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
-						print("inside the rectangle")
-						rectangle.Dragging_Pressed(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+				# means no button has been pressed and we do not risk blocking one
+				if canActivate :
+					for rectangle in Canvas.rects:
+						if canActivate :
+							if rectangle.IsInside_rectangle(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1]):
+								print("inside the rectangle")
+								rectangle.Dragging_Pressed(pygame.mouse.get_pos()[0], pygame.mouse.get_pos()[1])
+								canActivate = False
 
 
 

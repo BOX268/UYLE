@@ -71,6 +71,7 @@ class RectHandle(UI.PushButton) :
 
 		self.fracX = x
 		self.fracY = y
+		
 
 		x, y = self.ConvertFracToPx(x, y)
 
@@ -117,6 +118,10 @@ class RectHandle(UI.PushButton) :
 		x = max(x, 0)
 
 		self.fracX, self.fracY = self.ConvertPxToFrac(self.x, self.y)
+
+		# avoid possibility of the handle going outside the image
+		self.fracX = max(min(self.fracX, 1), 0)
+		self.fracY = max(min(self.fracY, 1), 0)
 
 
 		global updateUI
@@ -415,10 +420,11 @@ def PanImage() :
 def BoundPanning() :
 	global imgOffsetPannedY, imgOffsetPannedX
 
-	imgOffsetPannedX = max(imgOffsetPannedX, surface.get_width()- resizedImage.get_width())
+	# the -10 allow to see a little outside the image so you can access the handles at the very border
+	imgOffsetPannedX = max(imgOffsetPannedX, surface.get_width()- resizedImage.get_width() - 10)
 	imgOffsetPannedX = min(imgOffsetPannedX, 0)
 
-	imgOffsetPannedY = max(imgOffsetPannedY, surface.get_height() - resizedImage.get_height())
+	imgOffsetPannedY = max(imgOffsetPannedY, surface.get_height() - resizedImage.get_height() - 10)
 	imgOffsetPannedY = min(imgOffsetPannedY, 0)
 
 
@@ -469,7 +475,9 @@ def RequestUpdateUI() :
 # add a new label at the center of the screen
 def AddLabel() :
 	global lastObjectID 
-	rects.append(AdjustableRect(lastObjectID, 0.5, 0.5, 0.5, 0.5))
+	x = imgOffsetPannedX / resizeRatio
+	y = imgOffsetPannedY / resizeRatio
+	rects.append(AdjustableRect(lastObjectID, x, y, 0.1, 0.1))
 
 	RequestUpdateUI()
 
@@ -489,45 +497,48 @@ def SetFocusedLabelObject(num) :
 	RequestUpdateUI()
 
 def copy_rectangle():
-    global clipboard_rect
-    # On copie le rectangle actuellement sélectionné (par exemple, celui stocké dans Canvas.focusedLabel)
-    if focusedLabel is not None:
-        rect = focusedLabel
+	global clipboard_rect
+	# On copie le rectangle actuellement sélectionné (par exemple, celui stocké dans Canvas.focusedLabel)
+	if focusedLabel is not None:
+		rect = focusedLabel
 
-        clipboard_rect = {
-            "objectID": rect.objectID,
-            "left_fracX": rect.leftHandle.fracX,
-            "left_fracY": rect.leftHandle.fracY,
-            "right_fracX": rect.rightHandle.fracX,
-            "right_fracY": rect.rightHandle.fracY
-        }
-        print("Rectangle copié :", clipboard_rect)
-    else:
-        print("Aucun rectangle sélectionné pour copier.")
+		clipboard_rect = {
+			"objectID": rect.objectID,
+			"left_fracX": rect.leftHandle.fracX,
+			"left_fracY": rect.leftHandle.fracY,
+			"right_fracX": rect.rightHandle.fracX,
+			"right_fracY": rect.rightHandle.fracY
+		}
+		print("Rectangle copié :", clipboard_rect)
+	else:
+		print("Aucun rectangle sélectionné pour copier.")
 
 def paste_rectangle():
-    global clipboard_rect
-    if clipboard_rect is not None:
-        # On peut ajouter un petit décalage pour que le rectangle collé ne se superpose pas exactement
-        offset = 0.05  # Décalage en coordonnées fractionnaires
-        new_left_fracX = clipboard_rect["left_fracX"] + offset
-        new_left_fracY = clipboard_rect["left_fracY"] + offset
-        new_right_fracX = clipboard_rect["right_fracX"] + offset
-        new_right_fracY = clipboard_rect["right_fracY"] + offset
-        
-        # Calculer le centre et la taille du nouveau rectangle
-        center_x = (new_left_fracX + new_right_fracX) / 2
-        center_y = (new_left_fracY + new_right_fracY) / 2
-        width = abs(new_right_fracX - new_left_fracX)
-        height = abs(new_right_fracY - new_left_fracY)
-        
-        # Créer une nouvelle instance d'AdjustableRect avec ces données
-        new_rect = AdjustableRect(clipboard_rect["objectID"], center_x, center_y, width, height)
-        # Ajoute le nouveau rectangle à la liste globale de Canvas (que tu appelles par exemple Canvas.rects)
-        rects.append(new_rect)
-        print("Rectangle collé :", new_rect)
-    else:
-        print("Aucun rectangle copié dans le presse-papiers.")
+	global clipboard_rect
+	if clipboard_rect is not None:
+		# On peut ajouter un petit décalage pour que le rectangle collé ne se superpose pas exactement
+		offset = 0.05  # Décalage en coordonnées fractionnaires
+		new_left_fracX = clipboard_rect["left_fracX"] + offset
+		new_left_fracY = clipboard_rect["left_fracY"] + offset
+		new_right_fracX = clipboard_rect["right_fracX"] + offset
+		new_right_fracY = clipboard_rect["right_fracY"] + offset
+		
+		# Calculer le centre et la taille du nouveau rectangle
+		center_x = (new_left_fracX + new_right_fracX) / 2
+		center_y = (new_left_fracY + new_right_fracY) / 2
+		width = abs(new_right_fracX - new_left_fracX)
+		height = abs(new_right_fracY - new_left_fracY)
+		
+		# Créer une nouvelle instance d'AdjustableRect avec ces données
+		new_rect = AdjustableRect(clipboard_rect["objectID"], center_x, center_y, width, height)
+		# Ajoute le nouveau rectangle à la liste globale de Canvas (que tu appelles par exemple Canvas.rects)
+		rects.append(new_rect)
+		print("Rectangle collé :", new_rect)
+
+		RequestUpdateUI()
+		
+	else:
+		print("Aucun rectangle copié dans le presse-papiers.")
 
 
 
