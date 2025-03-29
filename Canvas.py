@@ -159,6 +159,11 @@ class AdjustableRect :
 		self.dragging = False
 		self.dragOffsetX = 0
 		self.dragOffsetY = 0
+	
+
+	def CalculateSize(self) :
+		self.fracWidth = self.rightHandle.fracX - self.leftHandle.fracX
+		self.fracHeight = self.rightHandle.fracY - self.leftHandle.fracY
 
 
 	def IsInside_rectangle(self, x_clicked, y_clicked):
@@ -194,6 +199,9 @@ class AdjustableRect :
 		self.dragOffsetX = x - x1
 		self.dragOffsetY = y - y1
 
+		# calculate the current size of the label, to maintain it during the dragging
+		self.CalculateSize()
+
 	def MouseReleased(self):
 		self.dragging = False
 
@@ -212,16 +220,10 @@ class AdjustableRect :
 			# La nouvelle position du coin supérieur gauche du rectangle
 			newLeftX = x - self.dragOffsetX
 			newLeftY = y - self.dragOffsetY
-			# On calcule la largeur et la hauteur en pixels (la taille reste constante)
-			x1, y1 = self.leftHandle.ConvertFracToPx(self.leftHandle.fracX, self.leftHandle.fracY)
-			x2, y2 = self.rightHandle.ConvertFracToPx(self.rightHandle.fracX, self.rightHandle.fracY)
-			width = x2 - x1
-			height = y2 - y1
 			# On met à jour les positions des poignées en convertissant les nouvelles positions en coordonnées fractionnaires
-			newLeftFrac = self.leftHandle.ConvertPxToFrac(newLeftX, newLeftY)
-			newRightFrac = self.rightHandle.ConvertPxToFrac(newLeftX + width, newLeftY + height)
-			self.leftHandle.fracX, self.leftHandle.fracY = newLeftFrac
-			self.rightHandle.fracX, self.rightHandle.fracY = newRightFrac
+			newLeftFracX, newLeftFracY = self.leftHandle.ConvertPxToFrac(newLeftX, newLeftY)
+			self.leftHandle.fracX, self.leftHandle.fracY = newLeftFracX, newLeftFracY
+			self.rightHandle.fracX, self.rightHandle.fracY = newLeftFracX + self.fracWidth, newLeftFracY + self.fracHeight
 			global updateUI
 			updateUI = True
 	

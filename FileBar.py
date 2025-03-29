@@ -63,7 +63,7 @@ def IsMouseInMenu(x : int, y : int) :
 def MouseScroll(value : int) :
 	global scroll
 	if mouseInMenu :
-		scroll += value * buttonHeight
+		scroll += value * buttonHeight * 3 # scroll 3 buttons at once
 		scroll = min(0, scroll)
 	
 		for i in range(len(generatedButtons)) :
