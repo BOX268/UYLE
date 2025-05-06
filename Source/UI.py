@@ -1,6 +1,6 @@
 import pygame
-import SharedData 
-import WindowManager as WM
+import Source.SharedData as SharedData
+import Source.WindowManager as WM
 
 
 pushButtons = []

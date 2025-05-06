@@ -1,7 +1,7 @@
-import UI
-import SharedData
-import Canvas
-import WindowManager as WM
+import Source.UI as UI
+import Source.SharedData as SharedData
+import Source.Canvas as Canvas
+import Source.WindowManager as WM
 
 import pygame
 

@@ -1,11 +1,11 @@
 import pygame
 import sys
 
-import WindowManager
-import UI
-import SharedData
-import FileBar
-import Canvas
+import Source.WindowManager as WindowManager
+import Source.UI as UI
+import Source.SharedData as SharedData
+import Source.FileBar as FileBar
+import Source.Canvas as Canvas
 
 pygame.init()
 

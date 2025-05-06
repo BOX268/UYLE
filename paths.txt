@@ -1,3 +1,6 @@
-/home/thibaud/Documents/Sudriabotik/Dataset_Cans/Images
-/home/thibaud/Documents/Sudriabotik/Dataset_Cans/Labels
-font/ConsolaMono-Book.ttf
+{
+    "autolabel_model_path": "",
+    "font_path": "font/ConsolaMono-Book.ttf",
+    "images_folder": "",
+    "labels_folder": ""
+}

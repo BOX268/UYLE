@@ -1,6 +1,6 @@
-import SharedData
-import WindowManager as WM
-import UI
+import Source.SharedData as SharedData
+import Source.WindowManager as WM
+import Source.UI as UI
 
 import pygame
 import os

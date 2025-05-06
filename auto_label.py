@@ -2,12 +2,22 @@ from ultralytics import YOLO
 import cv2
 import os
 import glob
-import SharedData
+import json
 
-SharedData.GetPaths()
 
+model_path = ""
+paths = None
+try :
+
+    with open("paths.txt") as file :
+        paths = json.load(file.read())
+        model_path = paths["autolabel_model_path"]
+
+except Exception as e :
+
+    raise e
 # Charger le modèle YOLOv8 entraîné
-model_path = SharedData.modelPath
+
 
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"Erreur : Le fichier '{model_path}' n'existe pas.")
@@ -16,12 +26,12 @@ else:
     print("✅ Modèle chargé avec succès.")
 
 # Dossier contenant les images à auto-labelliser
-image_folder = SharedData.imagePath
+image_folder = paths["images_folder"]
 if not os.path.exists(image_folder):
     raise FileNotFoundError(f"Erreur : Le dossier '{image_folder}' n'existe pas.")
 
 # Dossier où enregistrer les annotations
-annotation_folder = SharedData.labelPath
+annotation_folder = paths["labels_folder"]
 if not os.path.exists(image_folder):
     raise FileNotFoundError(f"Erreur : Le dossier '{annotation_folder}' n'existe pas.")
 

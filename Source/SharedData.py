@@ -1,10 +1,12 @@
 import os
+import sys
+import json
 
+PATH_FILE_NAME = "paths.txt"
 
 imagePath = ""
 labelPath = ""
 fontPath = ""
-modelPath = ""
 
 
 filePairs = {}
@@ -16,17 +18,38 @@ leftPanelWidth = 200
 classColors = [[0, 200, 0], [0, 0, 200], [200, 0, 0]]
 
 
+# check if shared config file exists, else creates it
+if not os.path.exists(PATH_FILE_NAME) :
+	
+	with open(PATH_FILE_NAME, "w") as f :
+
+		basePaths = {
+			"images_folder" : "",
+			"labels_folder" : "",
+			"font_path" : "font/ConsolaMono-Book.ttf",
+			"autolabel_model_path" : ""
+			}
+		
+		string = json.dumps(basePaths, sort_keys=True, indent=4)
+		f.write(string)
+		
+	raise RuntimeError("config file was not present, it has been created. Please fill it")
+	
+
+
 def GetPaths() :
 
 	global imagePath, labelPath, fontPath, modelPath
 
-	with open("paths.txt", "r") as file :
+	with open(PATH_FILE_NAME, "r") as file :
 
-		lines = file.readlines()
+		content = file.read()
 
-		imagePath = lines[0].strip("\n")
-		labelPath = lines[1].strip("\n")
-		fontPath = lines[2].strip("\n")
+		paths = json.load(content)
+
+		imagePath = paths["images_folder"]
+		labelPath = paths["labels_folder"]
+		fontPath = paths["font_path"]
 
 		print(imagePath)
 		print(labelPath)
